@@ -127,6 +127,7 @@ console.log("1. 안녕");
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>자바스크립트</title>
     <script scr="js/lib.js"></script>
+    <!-- 자바스크립트는 외부에 보관하라 -->
   </head>
   <body>
     <script>
@@ -296,6 +297,418 @@ let userPassword = ""; //16자 제한
 let userAgree = false; // 숫자 1자 제한
 ```
 
-#### var, let, const 정확히 제약사항 파악하기
+### 1.5. var, let, const 정확히 제약사항 파악하기
 
-### 1.5. 참조형 데이터 종류(Reference Data Type)
+- 웹브라우저에 저장할 내용, 즉 변수가 있다면 아래를 고민하자.
+
+#### 1.5.1. `1순위는 const` 입니다.
+
+- 변수를 만든다면 나는 var, let , const 중에 무엇을 선택할까?
+- const 는 변하지 않을 것이다 라는 작성법.
+- 필요하면 즉, 값이 코딩하다 보니 바뀌어야 하는 경우에 let 으로 변경한다.
+- const 의 특징
+
+  - 만들기 전에 사용할 수 없다. (호이스팅 문제 해결 됨!)
+
+  ```js
+  console.log(userName); // Error
+  const userName = "홍길동";
+  ```
+
+  - 동일한 이름으로 변수를 또 생성할 수 없다. (변수생성 중복 방지)
+
+  ```js
+  const userAge = 10;
+  const userAge = 40; // Error
+  ```
+
+  - 값을 변경할 수 없다.
+
+  ```js
+  const userCity = "대구";
+  userCity = "서울"; // Error
+  ```
+
+### 1.5.2. `2순위는 let` 입니다.
+
+- 만들기 전에 사용할 수 없다.(호이스팅 문제 해결!)
+
+```js
+console.log(userName);
+let userName = "홍길동";
+```
+
+- 동일한 이름으로 중복 생성할 수 없다. (중복 에러 생선 : const 와 동일)
+
+```js
+let userAge = 20;
+let userAge = 30; // Error
+```
+
+- 값을 나중에 변경할 수 있다. (const 와의 유일한 차이점)
+
+```js
+let userCity = "대구";
+userCity = "서울"; //괜찮다.
+```
+
+#### 1.5.3. `var는 사용하지 않는다`
+
+- 호이스팅 통과되어 버림. (추후 오류의 원인)
+- 동일한 이름으로도 중복 생성가능. (추후 오류의 원인)
+- 값도 변경이 가능하다.
+- 기존 코드에서 var 를 사용한 케이스가 있으면 그냥 유지한다.
+
+### 1.6. 참조형 데이터 종류(Reference Data Type)
+
+- 만약 interpark 사이트의 banner 영역의 데이터를 js 에서 관리하려고 한다.
+- 배너는 링크 주소, 이미지 주소, 고유한 ID 가 있다.
+- 하나의 배너는 변수 3개씩 가지고 있다.
+- 총 5개의 배너가 있다.
+
+```js
+//첫 번째배너
+const bannerUrl_1 = "https://~";
+const bannerImg_1 = "https://~";
+const bannerID_1 = "1";
+//두 번째배너
+const bannerUrl_2 = "https://~";
+const bannerImg_2 = "https://~";
+const bannerID_2 = "2";
+//세 번째배너
+const bannerUrl_3 = "https://~";
+const bannerImg_3 = "https://~";
+const bannerID_3 = "3";
+//네 번째배너
+const bannerUrl_4 = "https://~";
+const bannerImg_4 = "https://~";
+const bannerID_4 = "4";
+//닷 번째배너
+const bannerUrl_5 = "https://~";
+const bannerImg_5 = "https://~";
+const bannerID_5 = "5";
+```
+
+#### 1.6.1. 객체
+
+- 관련 있는 기본형 데이터들을 `묶어서 하나로` 만들기
+
+```js
+const 객체명 = {}; // 1단계
+
+//2단계
+const 객체명 = {
+    이름(key Name 키명, property 속성명) : 값, (key Value, value), // , 로 연결
+    이름: 값,
+    이름: 값,
+};
+
+const 객체명 = {
+    key Name 키명 : 키값, (key Value), // , 로 연결
+    이름: 값,
+    이름: 값,
+};
+
+const 객체명 = {
+   property 속성명: 속성값, (value), // , 로 연결
+    이름: 값,
+    이름: 값,
+};
+
+
+```
+
+```js
+//첫 번째배너
+const bannerUrl_1 = "https://~";
+const bannerImg_1 = "https://~";
+const bannerID_1 = "1"; //이름을 계속 만들어야함
+
+const banner_1 = {
+  url: "https://",
+  img: "https://",
+  id: "1",
+};
+
+//두 번째배너
+const bannerUrl_2 = "https://~";
+const bannerImg_2 = "https://~";
+const bannerID_2 = "2";
+
+const banner_2 = {
+  url: "https://~",
+  img: "https://~",
+  id: "2",
+};
+```
+
+- 객체 변수 정보에 담겨진 속성 즉, 키명을 통한 값 사용 (호출)
+
+```js
+객체명.키명;
+banner_1.url;
+
+["객체명"].키명;
+["banner_1"].url;
+```
+
+#### 1.6.2. 배열
+
+- 하나의 이름으로 여러개의 데이터를 묶어서 관리
+
+```js
+const userArray = [1, 2, 3, "안녕", false, null, undefined];
+const bannerId = ["1", "2", "3"];
+
+//첫 번째배너
+const banner_1 = {
+  url: "https://",
+  img: "https://",
+  id: "1",
+};
+
+//두 번째배너
+const banner_2 = {
+  url: "https://~",
+  img: "https://~",
+  id: "2",
+};
+
+const banner = [
+  { url: "http~", img: "http~", id: "1" },
+  { url: "http~", img: "http~", id: "2" },
+  { url: "http~", img: "http~", id: "3" },
+]; //순서가 있다
+```
+
+- 배열의 요소에 값 사용 (호출)
+
+```js
+배열명[인덱스번호];
+banner[1];
+```
+
+### 1.7. 변수 종합 예제
+
+- 인터파크 티켓 랭킹 작업
+
+```js
+//섹션의 타이틀
+const sectionTitle + "티켓 랭킹";
+console.log(sectionDesc);
+//섹션의 설명글
+const sectionDesc = "~~~";
+//섹션의 카테고리
+const sectionCategory_1 = "뮤지컬"
+const sectionCategory_2 = "콘서트"
+const sectionCategory_3 = "???" // 손이많이간다
+
+// 시작부터 끝나기 전까지가 0
+const sectionCategoryArr = ["뮤지컬","콘서트","스포츠"];
+sectionCategory[0]; // 뮤지컬
+sectionCategory[1]; // 콘서트
+sectionCategory[2]; // 스포츠
+
+console.log(sectionCategory);
+console.log(sectionCategory[0]);
+console.log(sectionCategory[1]);
+console.log(sectionCategory[2]);
+
+// 티켓의 타이틀 정보
+const tiketTitleArr = [
+    "팬텀 10주년 기념 공연",
+    "뮤지컬 <메디슨 카운티의 다리>",
+    "뮤지컬 <라이카>",
+];
+console.log(tiket);
+console.log(sectionDesc);
+console.log(sectionDesc);
+// 티켓의 이미지 경로
+const tiketImgArr = [
+    "https://a.jpg",
+    "https://b.jpg",
+    "https://c.jpg"
+];
+// 티켓의 링크 경로
+const tiketUrlArr = [
+    "https://a.html",
+    "https://b.html",
+    "https://c.html"
+];
+// 티켓의 순위
+const tiketRankArr = [
+    "1",
+    "2",
+    "3"
+];
+// 티켓의 공연장소
+const tiketPlaceArr = [
+    "대구",
+    "서울",
+    "제주"
+];
+// 공연일시
+const tiketDayArr = [
+    "04/07",
+    "05/09",
+    "05/04"
+];
+
+// 위의 사항을 효율적으로 관리하기 위한 작업
+
+const ticket_1 = {
+    title: "팬텀 10주년 기념 공연",
+    img: "https://a.jpg",
+    url:"https://a.html",
+    rank: 1,
+    place: "대구",
+    day: "04/07"
+};
+
+console.log(ticket_1);
+console.log(ticket_1.title);
+console.log(ticket_1.img);
+console.log(ticket_1.url);
+console.log(ticket_1.rank);
+console.log(ticket_1.place);
+console.log(ticket_1.day);
+
+const ticket_2 = {
+    title: "뮤지컬 <메디슨 카운티의 다리>",
+    img: "https://b.jpg",
+    url:"https://b.html",
+    rank: 2,
+    place: "서울",
+    day: "05/09"
+};
+
+console.log(ticket_2);
+console.log(ticket_2["title"]);
+console.log(tiket_2["img"]);
+console.log(tiket_2["url"]);
+console.log(tiket_2["rank"]);
+console.log(tiket_2["place"]);
+console.log(tiket_2["day"]);
+
+const ticket_3 = {
+    title: "뮤지컬 <라이카>",
+    img: "https://c.jpg",
+    url:"https://c.html",
+    rank: 3,
+    place: "제주",
+    day: "05/04"
+};
+
+ticketInfoJsonArr[0].title
+ticketInfoJsonArr[1].title
+ticketInfoJsonArr[2].title
+
+const ticketInfoArr = [ticket_1,ticket_2,ticket_3]
+
+// 보통 아래의 형태로 데이터가 들어오는 것을
+// JavaScript Object Notation 즉, `JSON` 이라고 합니다.
+
+const tiketInfoJsonArr =[
+    {
+    title: "팬텀 10주년 기념 공연",
+    img: "https://a.jpg",
+    url:"https://a.html",
+    rank: 1,
+    place: "대구",
+    day: "04/07"
+    },
+    {
+    title: "뮤지컬 <메디슨 카운티의 다리>",
+    img: "https://b.jpg",
+    url:"https://b.html",
+    rank: 2,
+    place: "서울",
+    day: "05/09"
+    },
+    {
+    title: "뮤지컬 <라이카>",
+    img: "https://c.jpg",
+    url:"https://c.html",
+    rank: 3,
+    place: "제주",
+    day: "05/04"
+    }
+];
+```
+
+## 2. 연산자(Operator)
+
+- 연상을 해서 결과값을 만드는 `기호`
+- 연산자 에 의한 새로운 `결과값이 나오는 것을 연산식`
+
+### 2.1. 사칙연산(`+ - * /`)
+
+- `+ 연산자`
+
+```js
+const numA = 0;
+const numB = 1;
+const result = numA + numB; // 1
+```
+
+```js
+const numA = "안녕";
+const numB = "hello";
+const result = strA + strB; // "안녕hello"
+```
+
+```js
+const numA = "홍길동";
+const numAge = 20;
+
+const result = "저기~" + strA + "님은 나이가" + numAge + "이군요!";
+// "저기~ 홍길동 님은 나이가 20 이군요!"
+// 숫자 + 글자는 글자로 인정함.
+
+// 아래처럼 템플릿 문법을 추천합니다. 흔히 백틱 이라고 합니다.
+
+const resultTemplate = `저기~ ${strA}님은 나이가 ${numAge}이군요!`;
+```
+
+```js
+<div class="section">
+  <div class="box_wrap">
+    <a href="https:~">뮤지컬 팬텀</a>
+    <img src="https:~" alt="뮤지컬 팬텀 배너이미지" />
+  </div>
+</div>
+```
+
+```js
+const link = "https~";
+const img = "https~";
+const title = "뮤지컬 팬텀";
+const alt = "뮤지컬 팬텀 배너이미지";
+let tag = '<div class="section">';
+tag = tag + ' <div class="box_wrap">';
+tag = tag + '  <a href="https:~">' + title + "</a>";
+```
+
+```js
+const link = "https~";
+const img = "https~";
+const title = "뮤지컬 팬텀";
+const alt = "뮤지컬 팬텀 배너이미지";
+const tag = `
+<div class="section">
+  <div class="box_wrap">
+    <a href="${link}">${title}</a>
+    <img src="${img}" alt="${alt}" />
+  </div>
+</div>
+`;
+```
+
+```js
+const numA = 5;
+const numB = 8;
+const resultA = `${numA} + ${numB} = ${numA + numB}`;
+const resultB = `${numA} - ${numB} = ${numA - numB}`;
+const resultC = `${numA} * ${numB} = ${numA * numB}`;
+const resultD = `${numA} / ${numB} = ${numA / numB}`;
+```
