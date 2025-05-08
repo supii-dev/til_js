@@ -712,3 +712,353 @@ const resultB = `${numA} - ${numB} = ${numA - numB}`;
 const resultC = `${numA} * ${numB} = ${numA * numB}`;
 const resultD = `${numA} / ${numB} = ${numA / numB}`;
 ```
+
+```js
+const a = 1; // number
+const b = "1"; // string
+// 1단계 number ===> string 으로 물어보지 않고 변환(암묵적 데이터 타입 변환)
+// string + string =====> string
+const result = a + b;
+```
+
+- `- 연산자`
+
+```js
+const numA = 100; // string
+const numB = 10; // number
+// string 을 number 로 암묵적 변환
+// number - number
+const result = numA - numB; // 90
+```
+
+```js
+const numA = "ABC"; // string
+const numB = 10; // number
+// string 을 number 로 암묵적 변환 실패
+const result = numA - numB; // NaN (Not a Number)
+```
+
+- `* / 연산자`
+
+```js
+const numA = 4;
+const numB = 2;
+const resultMulti = numA * numB; // 8
+const resultDevide = numA / numB; // 2
+```
+
+### 2.2. 나머지 연산 (`%`)
+
+- 총 게시글 52개
+- 한 페이지당 5개 목록
+- 몇 페이지가 필요한가?
+- 마지막 페이지에서 보여주어야 하는 게시글 수?
+
+```js
+const total = 52;
+const count = 5;
+const totalPage = total / count; // 소숫점 나옴
+const totalPageNumber = Math.ceil(totalPage); // 올림
+const lastCount = total % count; // 나머지 나옴 ,모듈러연산사
+```
+
+### 2.3. 복합연산자 (연산 타이핑 수를 줄인다)
+
+```js
+const numA = 5;
+let result = numA + 3; // 5 + 3 = 8
+
+// 코딩에 의한 가독성이 떨어집니다
+// 그런데 PG 들은 많이 사용하는 방식입니다.
+//result = result + 10; 줄여서 작성함.
+result += 10; // 18
+// result = result - 5;
+result -= 5; // 13
+// result = result * 4;
+result *= 4; // 52
+// result = result / 2;
+result /= 2; // 26
+// result = result % 2; % 나머지 , 모듈러 연산자
+result %= 2; // 0
+```
+
+### 2.4. 증감연산자 ( ++ -- )
+
+- 개발자는 타이핑 수를 줄이려고 노력합니다.
+
+```js
+let num = 5;
+num = num + 1;
+num += 1;
+num++; // 1 증가한다 , 후치연산자
+++num;
+```
+
+```js
+let num = 20;
+// 후에 배치된 후치연산 이라서
+let numA = num--; // numA 에는 20입니다. 그리고 연산
+num--; //19
+```
+
+```js
+let num = 20;
+// 전에 배치된 전치연산 이라서
+let numA = --num; // numA 에는 19입니다. 그리고 연산
+--num; //19
+```
+
+### 2.5. 논리연산자
+
+- ` 무조건 이해` 하셔야 합니다.
+- `falsy` 한 값의 종류 (js 에서 false 라고 판단하는 값)
+
+```js
+"";
+0;
+undefined;
+null;
+NaN;
+false;
+```
+
+#### 2.5.1. OR 연산자
+
+- 2개 중 1개만 true 이면 true, 나머지 false
+
+```js
+let result = true || true;
+result = false || false;
+result = false || true;
+// 참일것 같은 연산이 앞에와야 연산횟수가 줄어든다,속도가 다름
+result = "" || true;
+
+const userPass; // 초기의 값이 들어가야함
+result = userpass || "비밀번호 넣으세요.";
+
+let userPass; // undefined
+result = userpass || "비밀번호 넣으세요.";
+```
+
+#### 2.5.2. And 연산자 (그리고)
+
+- 둘다 true 면 true, 아니면 false
+- 변수에 결과값은 true, false 가 담겨진다.
+
+```js
+let result = true && true;
+result = false && true; //성능상 좋음
+result = false && false;
+//할일없을때 성능 최적화
+```
+
+#### 2.5.3. Not 연산자 (반대)
+
+```js
+let result = !true;
+result = !false;
+```
+
+#### 2.5.4. 실습 예제
+
+```js
+let nickName = "";
+let displayName = nickName || "Guest";
+console.log(displayName); // Guest
+```
+
+```js
+let title + null;
+let result = title || "제목 없음";
+console.log(result); //제목 없음
+```
+
+```js
+let totalMoney = 0;
+let result = totalMoney || "장바구니가 비었습니다.";
+console.log(result); //장바구니가 비었습니다.
+```
+
+```js
+let isLogin = true;
+let result = isLogin && "환영합니다.";
+console.log(result); // 환영합니다.
+```
+
+```js
+let isAdmin = false;
+let result = isAdmin && "관리자 메뉴 표시";
+console.log(result); //
+```
+
+```js
+let config = {};
+config.theme = config.theme || "light"; // 테마가있냐 물어봤는데
+console.log(config); // { theme: "light" } , 사용자 테마가 없으면 이거다.
+// 초기값세팅
+```
+
+```js
+let config = { theme: "red" };
+config.theme = config.theme || "light";
+console.log(config); // { theme: "red" }
+```
+
+```js
+let options = {
+  long: null,
+  fontSize: 0,
+};
+let lang = options.lang || "ko";
+let fontSize = options.fontSize || 20;
+```
+
+### 2.6. 비교연산자
+
+- 정말 중요합니다.
+
+```js
+// 데이터 값의 종류는 비교하지 않음.
+let resultA = "1" == 1; // true
+
+// 데이터 값과 데이터 종류도 비교함.
+let resultB = "1" === 1; // false
+
+let resultC = 1 > 2;
+let resultD = 1 < 2;
+let resultE = 1 >= 2;
+let resultF = 1 <= 2;
+let resultG = 1 != 2; // 다르냐
+let resultH = 1 !== 2; // 데이터 타입도 다르냐
+```
+
+### 2.7. 병합연산자
+
+- 내가 FE 라면 반드시 알아야 함.
+- 일반적으로 기본값 셋팅에서 활용
+- falsy 가 아니라 `null, undefined` 일때만 값을 비교할 경우
+- 아래에서 기대한 코드는 `0` 값이 나오길 기대하고 코드 진행함.
+
+```js
+let urerPoint = 0; // 사용자에게 0을 보여줌
+let displayPoint = userPoint || 500000;
+console.log(displayPoint); // 500000
+
+let userPoint = undefined;
+let displayPoint = userPoint || 500000;
+console.log(displayPoint); // 500000
+```
+
+- `??` 연산자는 null 과 undefined 만 비교한다.
+- 나머지는 `||` 과 같다.
+
+```js
+let userPoint = 0; // undefined,null 이 아니다.
+let displayPoint = userPoint ?? 500000;
+console.log(displayPoint); // 0 고대로 출력
+```
+
+```js
+let formInput = {
+  name: "",
+  email: null, // 개발자가 값이 없다고 지정하는 것, 값 지워라 청소해라 방빼라
+  phone: undefined, // 값이 없다고 JS 가 기본으로 지정
+};
+const name = formInput.name ?? "이름 없음";
+const email = formInput.email ?? "이메일 없음";
+const phone = formInput.phone ?? "전화 없음";
+```
+
+### 2.8. 옵셔널체이닝 (`?.`)
+
+- FE 라면 알아야 합니다.
+- 객체의 속성 존재 여부에 따라 코드 진행.
+- `{ 속성:값, }`
+
+```js
+const user = {
+  profile: null, // 웹브라우저가 멈춘다
+};
+const age = user.profile.age; // null Error 발생 후 서비스 멈춤
+```
+
+```js
+const user = {
+  profile: { age: 10, name: "홍길동" },
+};
+const age = user.profile.age; // 정상적 실행
+```
+
+```js
+const user = {
+  profile: { name: "홍길동" },
+};
+const age = user.profile.age; // 웹브라우저 다운
+```
+
+```js
+const user = {
+  profile: { name: "홍길동" },
+};
+const age = user.profile?.age; // 프로필 속성중에 age가 없어도 정상작동
+```
+
+```js
+const user = {
+  profile: null,
+};
+const age = user.profile?.age ?? "정보가 없어서 나이정보를 몰라요";
+// ??
+```
+
+### 2.9. 3항 연산자
+
+- 연산자가 3개라서 3항 연산자라고 합니다.
+- `결과 = 조건식 ? 참일떄 결과 : 거짓일때 결과;`
+- 활용 빈도가 너무 높습니다.
+
+```js
+const userRole = "ADMIN"; // 사용자 등급
+// const url = 조건 ? 참 : 거짓;
+const url = userRole === "ADMIN" ? "admin.html" : "guest.html";
+```
+
+- 미성년자 체크
+
+```js
+const age = 10;
+const result = age < 19 ? "동의서 필요" : "성인 인증";
+```
+
+```js
+const goodCount = 10;
+const result = goodCount > 0 ? "재고가 있어요" : "재고가 없어요";
+```
+
+```js
+const user = {
+  isLogin: true,
+  name: "아이유",
+};
+const result = user.isLogin ? `${user.name}님 반가워요. ` : "로그인 해 주세요.";
+```
+
+```js
+const user = {
+  isLogin: true,
+  name: "아이유",
+};
+const result = user?.isLogin
+  ? `${user?.name}님 반가워요. `
+  : "로그인 해 주세요."; // 서버다운 막기위해 ? 넣기도함
+```
+
+```js
+let num = 5;
+let result = 조건식 ? "짝수" : "홀수";
+```
+
+```js
+let num = 5;
+let result = num % 2 === 0 ? "짝수" : "홀수";
+```
