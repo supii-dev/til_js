@@ -1,7 +1,7 @@
-let count = 0;
+// 대문자 즉 Pascal
+function Coffee() {
+  console.log(this);
+}
 
-do {
-  //거짓을 만들기 위한 조건을 작성함.
-  count = count + 1;
-  console.log(count);
-} while (count < 5);
+Coffee();
+new Coffee();
