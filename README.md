@@ -2055,8 +2055,8 @@ calcFunc(add);
 
 - 함수가 간략해 집니다.
 - 함수가 최적화 됩니다.(메모리 절약, 성능 최적화 )
-- this 의 범위가 고정됩니다. (추후진행)
-- new 를 사용 못합니다. (추후진행)
+- this 의 범위가 고정됩니다.
+- new 를 사용 못합니다.
 
 ### 8.2. 화살표 함수 작성법 (반드시 이해하세요)
 
@@ -2387,3 +2387,49 @@ window.title = "대구여행"
 로컬 스코프를 만들어서 새로 빼낸다
 대문자로 시작되는 함수는 객체만들려고 함
 this를 사용해도 개별이라서 영향을 받지않음-->
+
+### 10.6. 내가 이해하기로 아래처럼 정리했다.
+
+- function 에 작성한 곳에 this 는 `어디서 함수를 사용했는가`에 따라 다르다.
+
+```js
+function say(){
+  this 는 ?
+}
+say(); 지금은 global 영역 즉, window 에서 사용했으므로
+```
+
+```js
+const Person = {
+  say: function (){
+    this ? Person 을 가르킨다.
+  }
+}
+
+Person.say(); 지금은 Person dl say 함수를 사용했으므로
+
+```
+
+- 과연 출력 결과는 무엇이 나올까요?
+
+```js
+const Person = {
+  name: "아이유",
+  say: function () {
+    console.log(this.name); // 아이유
+  },
+};
+Person.say();
+```
+
+### 10.7. 화살표 함수의 this 는?
+
+```js
+const Person = {
+  name: "아이유",
+  say: () => {
+    console.log(this.name); // 아이유
+  },
+};
+Person.say();
+```
