@@ -2425,11 +2425,765 @@ Person.say();
 ### 10.7. 화살표 함수의 this 는?
 
 ```js
+const say = () => {
+  console.log(this); // 현재의 상위 범위를 가리킨다
+}; // window 출력됨
+say();
+```
+
+```js
 const Person = {
   name: "아이유",
-  say: () => {
+  say: function () {
+    console.log(this); // Person 객체
     console.log(this.name); // 아이유
   },
+  sayArrow: () => {
+    console.log(this); // window
+    console.log(this.name); // window.name undefined
+  },
 };
+
 Person.say();
+Person.sayArrow();
 ```
+
+## 11. 생성자 함수 (목적이 `객체를 생성`하는 것)
+
+- `new 키워드`를 붙여서 함수를 호출한다.
+
+```js
+function Person() {
+  console.log(this);
+}
+new Person();
+```
+
+```js
+function Person(_name) {
+  this.name = _name;
+  this.say = function () {
+    console.log(this.name + " 안녕하세요.");
+  };
+  console.log(this);
+  console.log(this.name);
+}
+const a = new Person("둘리");
+a.say();
+const b = new Person("또치");
+b.say();
+const c = new Person("마이콜");
+c.say();
+const d = new Person("고길동");
+d.say();
+```
+
+- `prototype `을 이용하면 공통 기능을 자동으로 부여한다.
+
+```js
+function Person(_name) {
+  this.name = _name;
+  console.log(this);
+  console.log(this.name);
+}
+Person.prototype.say = function () {
+  console.log(this.name + " 안녕하세요.");
+};
+
+const a = new Person("둘리");
+a.say();
+const b = new Person("또치");
+b.say();
+const c = new Person("마이콜");
+c.say();
+const d = new Person("고길동");
+d.say();
+```
+
+## 12. 클래스
+
+- 목적이 `객체를 생성`하는 것
+
+### 12.1. 생성자 메소드 ( constructor Method )
+
+```js
+class Person {
+  // 클래스에서 메소드 함수 만드는 법
+  // 메소드명(){}
+
+  // 객체를 생성하는 함수 : 변경 불가
+  // 디폴트 객체 생성자 함수
+  constructor(_name, _age) {
+    console.log("new 하면 자동 실행");
+    console.log(_name);
+    this.name = _name;
+    this.age = _age;
+  }
+}
+
+const a = new Person("둘리", 500000);
+console.log(a);
+```
+
+### 12.2. 나의 메소드 만들기
+
+- `메소드명() { 할일 }`
+
+```js
+class Person {
+  constructor(_name, _age) {
+    this.name = _name;
+    this.age = _age;
+  }
+  // say 라는 메소드
+  say() {
+    console.log(this.name);
+  }
+}
+
+const a = new Person("둘리", 500000);
+a.say();
+```
+
+### 12.3. 나의 속성 만들기
+
+- Property : 프로퍼티
+- constructor 메소드에서 만든다.
+
+```js
+ constructor(_name, _age) {
+    this.name = _name;
+    this.age = _age;
+  }
+```
+
+### 12.4. 상속 이해해 보기
+
+- 1단계
+
+```js
+// 동물
+class Animal {
+  constructor() {
+    this.eye = 2;
+    this.nose = 1;
+  }
+}
+// 강아지
+class Dog {
+  constructor() {
+    this.eye = 2;
+    this.nose = 1;
+  }
+}
+// 새
+class Bird {
+  constructor() {
+    this.eye = 2;
+    this.nose = 1;
+  }
+}
+```
+
+- 단계 2.
+
+```js
+// 동물
+class Animal {
+  constructor(eye, nose) {
+    this.eye = eye;
+    this.nose = nose;
+  }
+  speak() {
+    console.log("소리를 내요");
+  }
+}
+const a = new Animal(2, 1);
+a.speak();
+
+console.log(a);
+// 강아지
+class Dog extends Animal {
+  constructor() {
+    super(2, 5); // new Animal();
+    this.name = "강아지";
+  }
+  speak() {
+    console.log("멍멍이라고 소리를 내요");
+  }
+}
+
+const b = new Dog();
+b.speak();
+console.log(b);
+
+// 새
+class Bird extends Animal {
+  constructor() {
+    super(2, 1);
+    this.name = "이쁜새";
+    this.city = "대구";
+  }
+  speak() {
+    console.log("짹짹이라고 소리를 내요");
+  }
+}
+const c = new Bird();
+c.speak();
+console.log(c);
+```
+
+### 12.5. 접근 제한자 이해하기
+
+- 프로퍼티와 메소드를 활용하는 경우 제한 걸기
+
+### 12.5.1. 종류
+
+- 만약 java 라면
+
+```java
+public  : 마음대로 접근가능, 공유하는
+private : 사적인 즉, 클래스 내부에서만 접근가능
+protected : 상속 받은 클래스들만 접근 가능
+```
+
+- 만약 javaScript 라면
+
+```js
+public : 마음대로 접근가능, 공유하는
+#  : 사적인 즉, 클래스 내부에서만 접근가능(private 역할)
+```
+
+```js
+class Animal {
+  // 안적으면 public (기본값)
+  eye;
+  // #을 적으면 private
+  #nose;
+
+  constructor(eye, nose) {
+    this.eye = eye;
+    this.#nose = nose;
+  }
+}
+
+class Dog extends Animal {
+  constructor() {
+    super(2, 5);
+  }
+}
+
+const a = new Dog();
+console.log(a);
+console.log(a.eye);
+console.log(a.#nose); // private 오류
+```
+
+### 12.6. static : 클래스에 고정된 속성, 메소드
+
+```js
+class MathCalc {
+  constructor() {}
+  static add(a, b) {}
+  static minus(a, b) {}
+}
+MathCalc.add(3, 4);
+MathCalc.minus(3, 4);
+
+const a = new MathCalc();
+a.add(3, 4); // 에러:생성된 객체로 접근 불가
+```
+
+## 13. 콜백함수
+
+- `call` 은 함수를 실행(호출)한다는 의미
+- 일반 함수에 `매개변수로 전달된 함수`를 callback 함수라 칭한다.
+
+### 13.1. 콜백함수 활용처
+
+- 주로 사용자 행동에 따른 `이벤트 발생`시 실행하는 함수
+- 서버 연동하여 자료를 호출하는 `이벤트 발생`시 실행하는 함수
+
+```js
+const say = function () {};
+const cry = () => {};
+
+// 매개변수로 전달된 함수 실행
+function run(a) {
+  a();
+}
+
+run(say);
+run(눈물);
+
+// 아래 추천함.
+run(function () {});
+```
+
+```js
+const bt = document.querySelector(".bt");
+bt.addEventListener("click", function () {});
+```
+
+## 14. 객체(Object)
+
+### 14.1. 객체를 `가장 간단`하게 만드는 법.
+
+-`객체 리터럴`로 생성한다. -`리터럴(literal)` 이라는 단어는 꼭 정의해 두세요.
+
+- 리터럴은 정해진 `값을 개발자가 직접 작성`해 주는 것.
+- 숫자 리터럴, 문자열 리터럴, 배열 리터럴, 객체 리터럴 등
+
+```js
+const 객체 = {
+  객체키명: 키값,
+  객체키명: 키값,
+};
+```
+
+-만약 객체를 1개씩 만든다면 즉, `객체리터럴로 생성한다`면 객체명은 `Camel Case`로
+
+```js
+const personInfo = {
+  nickName: "아이유",
+  age: 20,
+  jab: "singer",
+};
+```
+
+### 14.2. 여러 개의 동일한 형태(구조)의 객체를 생성한다면
+
+- `객체 생성자 함수`를 이용하는법
+
+```js
+function PersonInfo(_name, _age) {
+  this.nickName = "아이유";
+  this.age = 20;
+  this.jab = "singer";
+}
+const 아이유 = new PersonInfo("아이유", 20);
+const BTS = new PersonInfo("BTS", 20);
+```
+
+-`클래스`를 이용하는 법(클래스 이름이 `Pascal Case`)
+
+```js
+class PersonInfo {
+  constructor(_name, _age) {
+    this.nickName = "아이유";
+    this.age = 20;
+    this.jab = "singer";
+  }
+}
+const 아이유 = new PersonInfo("아이유", 20);
+const BTS = new PersonInfo("BTS", 20);
+```
+
+### 14.3. 연습예제
+
+```js
+const student_1 = {
+  name: "홍길동",
+  age: 10,
+};
+const student_1 = {
+  name: "둘리",
+  age: 2000,
+};
+```
+
+```js
+function student(_name, _age) {
+  this.Name = _name;
+  this.age = _age;
+}
+const student_1 = new student("홍길동", 10);
+const student_2 = new student("둘리", 2000);
+```
+
+### 14.4 객체에 값 말고 `기능 추가` 하기
+
+- 기능은 흔히 `메소드(Method)` 또는 `행위(Behavior)` 라고 호칭
+- 객체 리터럴로 메소드 추가해 보기
+
+```js
+const student_1 = {
+  name: " 홍길동",
+  age: 20,
+  // 정확하게는 property 로 기능 정의하기
+  sayName: function () {
+    this.name; //객체
+  },
+  sayAge: () => {
+    this.age; //window
+  },
+  // 가장 최신 문법으로 정확히 메소드 임을 표현
+  sayHi() {},
+};
+```
+
+```js
+function Student(){
+  this.name = _name;
+  this.age + _age;
+  this.sayName = function (){
+    consol.log(this.name); //객체
+  },// 속성에 기능주기
+  // 아 위험하다. 화살표 주의
+    this.age = () => {
+    consol.log(this.age); //window
+  },
+  // this.sayHi = () {
+  //   consol.log(this.age);
+  // },
+}
+Student.prototype.sayHi
+const student_1 = new Student("홍길동",20)
+```
+
+- 클래스로 만들어 보자. (지금 괜찮다. 활용도 떨어진다.)
+
+```js
+class Student {
+  constructor(_name, _age) {
+    this.name = _name;
+    this.age = _age;
+  }
+  sayName() {
+    this.name;
+  }
+  // 화살표 독특하다. class 의 화살표는 객체
+  sayAge = () => {
+    this.age;
+  };
+  sayHi() {
+    this.name;
+  }
+}
+const student_1 = new Student("홍길동", 20);
+```
+
+- `정말 중요함 1. : Vue, React 에서는 기본이 객체 생성으로 시작함.`
+- `정말 중요함 2. : Vue, React 에서는 화살표 함수를 기본으로 함.`
+- `객체 생성자 함수`, `클래스`의 화살표 함수에서의 `this 는 모듈객체`를 가르킨다.
+
+## 15. 배열(Array)
+
+- 데이터 종류와 상관없이 여러개를 `인덱싱(순서대로)` 할 수 있습니다.
+
+### 15.1. 배열 만드는 법
+
+```js
+//가장 많이 함 (배열 리터럴)
+const 배열명 = [요소, 요소, 요소];
+// 추천하지 않음
+const 배열명 = new Array(3);
+```
+
+### 15.2. 배열의 요소를 인덱스로 찾기
+
+```js
+const 배열 = [1, "안녕", false, function () {}];
+배열[0];
+배열[1];
+배열[2];
+배열[3];
+```
+
+### 15.3. 배열도 객체라서 `속성`이 있어요.
+
+```js
+const 배열 = [1, 3, 5];
+배열.length; //3개
+```
+
+### 15.4. 무지막지하게 데이터 종류 중 배열을 다룹니다.
+
+- 일반적 데이터 형태 : `[{},{},{},{}]`
+- 배열을 프로그래밍에서 많이 다루므로 `미리 함수를 제공`함 (빌트인 함수).
+- 주의 사항으로서 절대로 `원본을 훼손하지 마셔야 합니다`(불변성 유지).
+
+### 15.5. 배열을 다루는 함수에서 원본을 훼손하는 배열함수
+
+- `이거 쓰시면 안됩니다.`
+
+- push() : 배열 `끝`에 추가 // 메소드
+
+```js
+const lunchArr = ["사과", "딸기", "과자", "햄버거"];
+lunchArr.push("커피");
+console.log(lunchArr);
+// 커피 추가 (원본 훼손)
+// [  "사과",  "딸기",  "과자",  "햄버거",  "커피"]
+```
+
+- pop() : `끝` 요소 제거 및 제거된 요소 반환
+
+```js
+const lunchArr = ["사과", "딸기", "과자", "햄버거"];
+lunchArr.pop();
+console.log(lunchArr);
+// 햄버거 제거 (원본 훼손)
+// [  "사과",  "딸기",  "과자"]
+```
+
+- unshift() : `앞` 요소 추가
+
+```js
+const lunchArr = ["사과", "딸기", "과자", "햄버거"];
+lunchArr.unshift("커피");
+console.log(lunchArr);
+// 햄버거 앞자리 추가 (원본 훼손)
+// ["커피", "사과",  "딸기",  "과자", "햄버거"]
+```
+
+- shift() : `앞 첫번째` 요소 제거
+
+```js
+const lunchArr = ["사과", "딸기", "과자", "햄버거"];
+lunchArr.shift();
+console.log(lunchArr);
+// 햄버거 앞자리 제거 (원본 훼손)
+// ["딸기",  "과자", "햄버거"]
+```
+
+- splice() : `원하는 인덱스` 부터 추가, 제거
+
+```js
+const lunchArr = ["사과", "딸기", "과자", "햄버거"];
+lunchArr.splice(1, 2);
+console.log(lunchArr);
+// 인덱스로 부터 개수만큼 제거 (원본 훼손)
+// ["사과", "햄버거"]
+```
+
+- sort() : 배열의 순서를 정렬하기
+
+```js
+const lunchArr = ["사과", "딸기", "과자", "햄버거"];
+lunchArr.sort();
+console.log(lunchArr);
+// ['과자', '딸기', '사과', '햄버거']
+const enArr = ["k", "o", "r", "e", "A", "j", "p", "a", "n"];
+
+// 원본훼손
+enArr.sort();
+console.log(enArr);
+// ['A', 'a', 'e', 'j', 'k', 'n', 'o', 'p', 'r']
+const numArr = [1, 2, 12, 25, 37, 30];
+// 원본훼손
+numArr.sort();
+console.log(numArr);
+// 단순히 sort() 를 사용하면 앞 글자를 기준으로 정렬됨.
+// [1, 12, 2, 25, 30, 37]
+
+// 내림 차순으로 정렬해 보자.
+// numArr.sort((a, b) => b - a);
+// [37, 30, 25, 12, 2, 1]
+
+// 올림 차순
+numArr.sort((a, b) => a - b);
+console.log(numArr);
+// [1, 2, 12, 25, 30, 37]
+```
+
+- reverse() : `역순` 순서를 뒤집어 저장
+
+```js
+const numArr = [1, 2, 12, 25, 37, 30];
+// 원본 훼손
+numArr.reverse();
+console.log(numArr);
+// [30, 37, 25, 12, 2, 1]
+```
+
+- fill() : 요소에 값을 채운다.
+
+```js
+const numArr = [1, 2, 12, 25, 37, 30];
+// 원본 훼손
+// numArr.fill(0);
+console.log(numArr);
+// [0, 0, 0, 0, 0, 0]
+// 값 1 을 채워라
+// 인덱스 3번으로 부터
+// 인덱스 5번 전까지
+numArr.fill(1, 3, 5);
+console.log(numArr);
+// [1, 2, 12, 1, 1, 30]
+```
+
+- flat() : `배열을 평탄화` 사용합니다.
+  : flat 을 위한 별도의 라이브러가 존재합니다.
+  : react 에서 모듈을 설치해서 사용합니다.
+
+```js
+const numArr = [1, 2, 3, ["a", "b", "c"], 8, 9];
+// flat(배열의 단계)
+const result = numArr.flat(1);
+console.log(result);
+// [1, 2, 3, 'a', 'b', 'c', 8, 9]
+const num2Arr = [1, 2, [3, [4, [5, 6]]], 100];
+const result2 = num2Arr.flat(1);
+console.log(result2);
+// [1, 2, 3, Array(2), 100]
+const result3 = result2.flat(1);
+console.log(result3);
+// [1, 2, 3, 4, Array(2), 100]
+const result4 = result3.flat(1);
+console.log(result4);
+// [1, 2, 3, 4, 5, 6, 100]
+```
+
+### 15.6. 배열을 다루는 함수에서 원본을 훼손하지 않고 `새로운 배열을 만들어 주는 함수`
+
+- `데이터 불변성(immutability)` 유지하셨나요?
+
+#### 15.6.1. map() 중요★☆★☆★☆★☆★☆★☆★☆★☆
+
+배열.map(function(item, index,arr){return 값})
+html 태그 형태로 배열을 만듦
+배열.filter (function(요소, 인덱스,원본배열){return 값})
+
+- `star가 1000만개` 가치가 있고, 자주활용
+- 원본 배열의 요소에 동일한 함수 실행 후 새로운 배열로 생성
+
+```js
+const originArr = ["홍길동", "고길동", "김수한무"];
+const copyArr = originArr.map(function (item, index, arr) {
+  // console.log(`item : ${item}, index: ${index}`);
+  const tag = `<div class="user-info">${item}</div>`;
+  console.log(tag);
+  // 리턴해야 배열이 담깁니다.
+  return tag;
+});
+console.log(`원본 originArr : ${originArr}`);
+console.log(`복제본 copyArr : ${copyArr}`);
+
+const copyArrowArr = originArr.map((item, index) => {
+  return `<a href="${index}">${item}</a>`;
+});
+console.log(`복제본 copyArrowArr : ${copyArrowArr}`);
+```
+
+#### 15.6.2. filter()
+
+- 조건에 참인 것만 모아서 배열 리턴
+- 자주 사용은 합니다.
+
+```js
+const memberHong = {
+  age: 10,
+  name: "홍길동",
+  role: "GUEST",
+};
+const memberKim = {
+  age: 18,
+  name: "김수한무",
+  role: "MEMBER",
+};
+const memberPark = {
+  age: 25,
+  name: "박둘리",
+  role: "ADMIN",
+};
+
+const originArr = [memberHong, memberKim, memberPark];
+
+const result = originArr.filter(function (item, index, arr) {
+  // return item.role === "ADMIN";
+  return item.age <= 20;
+});
+console.log(result);
+```
+
+#### 15.6.3. slice()
+
+- 배열의 일부를 복사한다.
+
+```js
+const numArr = [1, "a", "b", 4];
+// 시작 인덱스로 부터 도착 인덱스 미만 요소 출력
+const nowArr = numArr.slice(1, 3);
+console.log(numArr);
+console.log(nowArr); //  ['a', 'b']
+```
+
+#### 15.6.4. concat();
+
+- 배열을 `합쳐서` 하나의 배열을 리턴.
+
+```js
+const numArr1 = [1, "a", "b", 4];
+const numArr2 = [8, 100];
+const result = numArr1.concat(numArr2);
+console.log(result);
+// [1, 'a', 'b', 4, 8, 100]
+```
+
+#### 15.6.5. reduce();
+
+- 배열의 요소를 탐색하면서 누적 연산함.
+- 누적된 결과를 출력함.
+
+```js
+const numArr1 = [1, 2, 3, 4];
+// 문법이 좀 다릅니다.
+// 보통은 ===>  (item, index, arr)
+// const total = numArr1.reduce(함수, 초기값)
+const total = numArr1.reduce((acc, cur) => {
+  console.log("acc : ", acc);
+  console.log("cur : ", cur);
+  return acc + cur;
+}, 0);
+
+console.log("total : ", total);
+```
+
+#### 15.6.6. join();
+
+- 문자열로 배열을 연결한 결과를 만든다.
+
+```js
+const numArr1 = [1, 2, 3, 4];
+// 기본은 ,  연결된 글자
+const result = numArr1.join("#");
+// 결과는 string
+console.log(`typeof ${typeof result} , ${result}`);
+// typeof string , 1#2#3#4
+```
+
+#### 15.6.7. indexOf();
+
+- 찾는 요소가 몇번째 인덱스 인지를 파악
+
+```js
+const numArr1 = [1, 2, 3, 4];
+// 기본은 ,  연결된 글자
+const result = numArr1.indexOf(3);
+console.log(`typeof ${typeof result} , ${result}`);
+// typeof number , 인덱스 2
+```
+
+#### 15.6.8. includes();
+
+- 요소가 포함되었는지 아닌지
+
+```js
+const numArr1 = [1, 2, 3, 4];
+// 기본은 ,  연결된 글자
+const result = numArr1.includes(3);
+console.log(`typeof ${typeof result} , ${result}`);
+// typeof boolean , true
+```
+
+const todoArr = [
+{id: 1, title: "공부", completed: true},
+{id: 1, title: "운동", completed: true},
+{id: 1, title: "식사", completed: false},
+];
+const completedArr = todoArr.filter(function(item, index, arr){
+if(item.completed === true) {
+retun item;
+}
+})
