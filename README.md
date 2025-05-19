@@ -3471,9 +3471,135 @@ getData("todos", todosParser);
 getData("users", usersParser);
 ```
 
+```js
+// 데이터 서버에 자료를 호출함
+function getData(api = "posts") {
+  return new Promise(function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `https://jsonplaceholder.typicode.com/photos${api}`);
+    xhr.send();
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // 성공
+        resolve(xhr.response);
+      } else if (xhr.status === 404) {
+        // 실패
+        reject("데이터 없어요.");
+      } else if (xhr.status === 505) {
+        console.log("서버가 불안정합니다. 잠시 후 재접속해주세요.");
+      }
+    };
+  });
+}
+
+getData("posts")
+  .then(function (data) {})
+  .catch(function (err) {}); // then(성공할때 resolve).catch(실패할때 reject)
+
+getData("posts").then().catch(); // 함수call
+getData("comments").then().catch();
+getData("albums").then().catch();
+getData("photos").then().catch();
+getData("todos").then().catch();
+getData("users").then().catch();
+```
+
 ### 17.5. Promise 활용하기
 
 - 서버 연동이 끝날 때 원하는 콜백함수 실행
 - 2개의 매개변수를 전달 받는다.
 - resolve 콜백함수 : 성공시 실행함수
 - reject 콜백함수 : 실패시 실행함수
+
+```js
+function getData(api = "posts") {
+  return new Promise(function (resolve, reject) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `https://jsonplaceholder.typicode.com/photos${api}`);
+    xhr.send();
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // 성공
+        resolve(xhr.response);
+      } else if (xhr.status === 404) {
+        // 실패
+        reject();
+      } else if (xhr.status === 505) {
+        console.log("서버가 불안정합니다. 잠시 후 재접속해주세요.");
+      }
+    };
+  });
+}
+
+getData("posts")
+  .then(function (data) {
+    return getData("comments");
+  })
+  .then(function (data) {
+    return getData("albums");
+  })
+  .then(function (data) {
+    return getData("photos");
+  })
+  .then(function (data) {
+    return getData("todos");
+  })
+  .then(function (data) {
+    return getData("users");
+  })
+  .catch(function (err) {});
+```
+
+### 17.6. async / await
+
+- 강력히 추천합니다.
+- Promise 를 편하게 쓰기위해서 최신 문법 제공
+- `function 키워드 앞쪽에 async` 를 작성합니다.
+- `BE 연동 쪽에 await` 를 작성합니다.
+- 1단계
+
+```js
+async function getAllData() {
+  try {
+  } catch (error) {}
+}
+
+getAllData();
+```
+
+- 2단계
+
+```js
+async function getAllData() {
+  try {
+    const apiUrl = "https://jsonplaceholder.typicode.com";
+    // BE 데이터 연동 시도
+    let res = await fetch(`${apiUrl}/posts`);
+    let data = await res.json();
+    console.log(data);
+
+    res = await fetch("https://jsonplaceholder.typicode.com/posts");
+    data = await res.json();
+    console.log(data);
+    res = await fetch("https://jsonplaceholder.typicode.com/comments");
+    data = await res.json();
+    console.log(data);
+    res = await fetch("https://jsonplaceholder.typicode.com/albums");
+    data = await res.json();
+    console.log(data);
+    res = await fetch("https://jsonplaceholder.typicode.com/photos");
+    data = await res.json();
+    console.log(data);
+    res = await fetch("https://jsonplaceholder.typicode.com/todos");
+    data = await res.json();
+    console.log(data);
+    res = await fetch("https://jsonplaceholder.typicode.com/users");
+    data = await res.json();
+    console.log(data);
+  } catch (error) {
+    console.log("ERROR 입니다. : " + error);
+  }
+}
+
+getAllData();
+```
